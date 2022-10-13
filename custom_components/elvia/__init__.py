@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 
 # from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
@@ -13,7 +14,7 @@ from .const import COST_PERIOD, MAX_HOURS, METER, METER_READING, TOKEN
 from elvia.elvia import ElviaApi
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
-
+_LOGGER = logging.getLogger(__name__)
 
 # pylint: disable=fixme
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -28,7 +29,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         result = await ElviaApi(entry.data[TOKEN]).get_meters()
         hass.data[METER] = result
     except asyncio.TimeoutError as err:
-        raise ConfigEntryNotReady from err
+        _LOGGER.error("Error contacting Elvia: %s", err)
+        return False
 
     # IF NEEDED: entry.async_on_unload(hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, _close))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
