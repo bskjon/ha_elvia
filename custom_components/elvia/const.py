@@ -9,6 +9,7 @@ METER_READING = "meter_reading"
 MAX_HOURS = "max_hours"
 COST_PERIOD = "grid_cost_period"
 METER = "meter"
+DATA_HASS_CONFIG = "elvia_hass_config"
 
 
 DATA_TYPE = "data_type"

@@ -31,14 +31,10 @@ data_types: dict[str, int] = {"Max Hours": 0, "Meter Values": 1}
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(TOKEN): cv.string,
-        #        vol.Optional(METER_ID, default=[]),
         vol.Optional(INCLUDE_PRODUCTION_TO_GRID, default=False): cv.boolean,
         vol.Optional(COST_PERIOD, default=True): cv.boolean,
         vol.Optional(MAX_HOURS, default=True): cv.boolean,
         vol.Optional(METER_READING, default=False): cv.boolean,
-        # vol.Required(DATA_TYPE): vol.In(list(data_types))
-        #        vol.Required("username"): str,
-        #        vol.Required("password"): str,
     }
 )
 
@@ -49,16 +45,8 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
     Data has the keys from STEP_USER_DATA_SCHEMA with values provided by the user.
     """
-    # #TODO validate the data can be used to set up a connection.
-
-    # If your PyPI package is not built with async, pass your methods
-    # to the executor:
-    # await hass.async_add_executor_job(
-    #     your_validate_func, data["username"], data["password"]
-    # )
 
     result = await ElviaApi(data[TOKEN]).get_meters()
-    # result: ElviaData = await asyncio.run(Elvia(data[TOKEN]).get_meters(), 1000)
 
     if result.status_code == 401:
         raise InvalidAuthenticationToken
@@ -67,12 +55,6 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     if result.status_code != 200:
         raise Exception("Something, something went wrong...")
 
-    # If you cannot connect:
-    # throw CannotConnect
-    # If the authentication is wrong:
-    # InvalidAuth
-
-    # Return info that you want to store in the config entry.
     return {"title": "elvia", "token": data[TOKEN], METER: result}
 
 

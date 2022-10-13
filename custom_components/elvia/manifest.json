@@ -1,7 +1,7 @@
 {
   "domain": "elvia",
   "name": "elvia",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "config_flow": true,
   "documentation": "https://github.com/bskjon/ha_elvia",
   "issue_tracker": "https://github.com/bskjon/ha_elvia/issues",
